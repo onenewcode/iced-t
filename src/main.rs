@@ -1,4 +1,4 @@
-use iced::{alignment, widget::{button, column, container, row, scrollable, text, text_input, Column}, Element, Length, Padding, Sandbox, Settings};
+use iced::{alignment, executor, widget::{button, column, container, row, scrollable, text, text_input, Column}, Application, Command, Element, Length, Padding, Sandbox, Settings, Theme};
 struct GroceryList {
 	grocery_items: Vec<String>,
     input_value: String,
@@ -9,20 +9,22 @@ enum Message {
 	Submitted,
     DeleteItem(usize),
 }
-impl Sandbox for GroceryList {
-	type Message = Message;
+impl Application for GroceryList {
+    type Executor = executor::Default;
+     type Flags = ();
+     type Message = Message;
+     type Theme = Theme;
+	
 	
 	/* 初始化应用 */
-    fn new() -> GroceryList {
-        Self {
-            grocery_items: vec![
-                "Eggs".to_owned(), 
-                "Milk".to_owned(), 
-                "Flour".to_owned()
-            ],
-            input_value: String::default()
-        }
-    }
+    fn new(_flags: ()) -> (GroceryList, Command<Self::Message>) {
+                 (Self {
+                    grocery_items: vec![
+                        "Eggs".to_owned(), 
+                        "Milk".to_owned(), 
+                        "Flour".to_owned()
+                    ],input_value: String::default()}, Command::none())
+             }
 	
 	/**
 	* 窗口的标题。它将显示在应用程序窗口的顶部。
@@ -30,8 +32,8 @@ impl Sandbox for GroceryList {
 	fn title(&self) -> String {
 		String::from("Grocery List App")
 	}
-	
-    fn update(&mut self, message: Self::Message) {
+    // A set of asynchronous actions to be performed by some runtime.
+	fn update(&mut self, message: Self::Message) -> Command<Self::Message> {
         match message {
             Message::InputValue(value) => self.input_value = value,
             Message::Submitted => {
@@ -42,7 +44,8 @@ impl Sandbox for GroceryList {
                 self.grocery_items.remove(item);
             },    
         }
-    }
+             Command::none()
+        }
 	fn view(&self) -> Element<Self::Message> {
         container(
             column!(
@@ -69,6 +72,18 @@ impl Sandbox for GroceryList {
     fn theme(&self) -> iced::Theme {
 		iced::Theme::Dark
 	}
+    
+        fn style(&self) -> <Self::Theme as iced::application::StyleSheet>::Style {
+            <Self::Theme as iced::application::StyleSheet>::Style::default()
+        }
+    
+        fn subscription(&self) -> iced::Subscription<Self::Message> {
+            iced::Subscription::none()
+        }
+    
+        fn scale_factor(&self) -> f64 {
+            1.0
+        }
    
 }
 // 设置数据排列方式
