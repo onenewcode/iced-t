@@ -2,7 +2,6 @@ use iced::{alignment, widget::{button, column, container, row, scrollable, text,
 struct GroceryList {
 	grocery_items: Vec<String>,
     input_value: String,
-    
 }
 #[derive(Debug, Clone)]
 enum Message {
@@ -39,6 +38,9 @@ impl Sandbox for GroceryList {
                 self.grocery_items.push(self.input_value.clone());
                 self.input_value = String::default(); // Clear the input value
             }
+            Message::DeleteItem(item) => {
+                self.grocery_items.remove(item);
+            },    
         }
     }
 	fn view(&self) -> Element<Self::Message> {
@@ -77,8 +79,8 @@ fn items_list_view(items: &Vec<String>) -> Element<'static, Message> {
     .align_items(iced::Alignment::Center)
     .width(Length::Fill);
 
-    for value in items {
-        column = column.push(text(value));
+    for (index, value) in items.into_iter().enumerate() {
+        column = column.push(grocery_item(index, value));
     }
 
     scrollable(
@@ -88,6 +90,16 @@ fn items_list_view(items: &Vec<String>) -> Element<'static, Message> {
     )
     .height(250.0)
     .width(300)
+    .into()
+}
+fn grocery_item(index: usize, value: &str) -> Element<'static, Message> {
+    row!(
+        text(value),
+        button("Delete")
+        .on_press(Message::DeleteItem(index))
+    )
+    .align_items(iced::Alignment::Center)
+    .spacing(30)
     .into()
 }
 fn main() -> iced::Result {
