@@ -1,5 +1,6 @@
 use iced::{alignment, Element, Length, Sandbox, Settings};
-use iced::widget::{container, text, Column, column};struct GroceryList {
+use iced::widget::{container, text, Column, column};
+struct GroceryList {
 	grocery_items: Vec<String>
 }
 #[derive(Debug, Clone)]
