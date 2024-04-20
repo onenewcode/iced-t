@@ -1,6 +1,7 @@
 use iced::{alignment, Element, Length, Sandbox, Settings};
-use iced::widget::{container, text};
-struct GroceryList {}
+use iced::widget::{container, text, Column, column};struct GroceryList {
+	grocery_items: Vec<String>
+}
 #[derive(Debug, Clone)]
 enum Message {}
 impl Sandbox for GroceryList {
@@ -8,7 +9,13 @@ impl Sandbox for GroceryList {
 	
 	/* 初始化应用 */
 	fn new() -> GroceryList {
-		Self {}
+		Self {
+			grocery_items: vec![	
+				"Eggs".to_owned(),
+				"Milk".to_owned(),
+				"Flour".to_owned()
+			]
+		}
 	}
 	
 	/**
@@ -22,9 +29,11 @@ impl Sandbox for GroceryList {
 		// 更新应用信息状态
 	}
 	
-	fn view(&self) -> Element<Self::Message> {
+    fn view(&self) -> Element<Self::Message> {
+	
         container(
-            text("Hello World")
+       
+            items_list_view(&self.grocery_items),
         )
         .height(Length::Fill)
         .width(Length::Fill)
@@ -35,6 +44,24 @@ impl Sandbox for GroceryList {
     fn theme(&self) -> iced::Theme {
 		iced::Theme::Dark
 	}
+}
+// 设置数据排列方式
+fn items_list_view(items: &Vec<String>) -> Element<'static, Message> {
+	let mut column = Column::new()
+	.spacing(20)
+	.align_items(iced::Alignment::Center)
+	.width(Length::Fill);
+	
+	for value in items {
+		column = column.push(text(value));
+	}  
+	
+	container(
+		column
+	)
+	.height(250.0)
+	.width(300)
+	.into()
 }
 fn main() -> iced::Result {
 	GroceryList::run(Settings::default())
