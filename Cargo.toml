@@ -1,9 +1,19 @@
-[package]
+[workspace.package]
 name = "iced-t"
 version = "0.1.0"
 edition = "2021"
 
 
-
-[dependencies]
-iced = {version = "0.12.1"}
+[workspace]
+members = [
+    "xtask",
+    "examples/custom_widget"]
+resolver = "2"
+[workspace.dependencies]
+iced = {version = "0.12.1",features = ["advanced"]}
+clap = { version = "4", features = ["derive"] }
+# 这里name是你想给这个可执行文件起的名字，path是指向包含main函数的模块的路径。
+# 使用cargo run --bin my_binary来运行你新定义的可执行文件。
+# [[bin]]
+# name = "custom_widget"
+# path = "examples/custom_widget/src/main.rs"
